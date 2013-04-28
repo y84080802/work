@@ -1,0 +1,74 @@
+Array & Object constructing
+构造数组和对象的时候，new Array() and new Object()要比 [] and {}慢3倍的时间
+Index Number type for Arrays
+数组的数字索引类型
+ist[int(0)] 比list[0]要快
+Create Array vs. Updating Array
+再循环语句中避免多次创建数组，最好创建一次用多次更新内容替换
+Nulling Array vs. Splicing Array
+对于庞大的数组而言就行splice操作是比较耗成本的，要尽量避免
+When working with large Arrays splicing is obviously an expensive operation, you can avoid this by nulling the index and skipping it in a null scenario. If you need to splice in order to keep the Array length low. Then store these nulled indexes in another trash Array once the garbage count has reached a limit you've defined loop through the numerically sorted trash indexes deleting splices in bulk. This concept is demonstrated in Tweensy.
+Nulling Object vs. Delete Object
+delete一个对象的属性要比把该属性设置为null 更昂贵，所以对于对象的属性最好设置为null
+Nesting Loops（嵌套循环）
+多次嵌套循环效率差，所以最好保证循环在2层以内
+Inline code vs. function references
+如果在时间帧上的函数很长而且执行时间长，最好，把该函数分成多个小的函数执行。
+这样可以缩短执行时间提高效率
+Arguments vs. variable referencing
+尽量最小化函数的参数个数
+Function apply scoping do it or not?
+Scoping function.apply is a little bit slower than not so if you don't have to then don't.
+Array push vs. Array index
+用设置index的方式来代替使用数组函数push
+比如
+list[list.length] = data; 要比直接用push快600%；
+Array emptying - length 0 vs. A new Array
+如果你需要设置一个空数组，有一个方便的办法去选择，就是通过设置它的length属性为0
+或者你会认为这么做是不错的选择，原因是它能节省内存，但是事实上这样做的执行速度不如直接new array的效率高
+当然，如果你需要在一次循环中清除多于510个数组为空时，用length设置为0的时候会更好
+Var declarations on multiple lines vs. Var declarations on a single line
+将变量声明在一行中，要比声明多行更好，效率更高
+i.e.
+var a:int=0, b:int=0, c:int=0; 
+vs.
+var a:int=0;
+var b:int=0;
+var c:int=0;
+Using Xor to swap variables
+如果你想去交换变量，但是又不想创建新的变量的时候，可以用xor
+如：
+a = a^b;
+b = a^b;
+a = a^b;
+Multiplication vs. Division
+乘法的运算速率总是比出发快，比如5000/1000 要比 5000*0.001快130%；
+Type casting comparison 强制转换类型对比
+When type casting the keyword as is 250% more efficient than casting by Type(item); Though surprisingly not using either is about 1400% more efficient.
+建议使用对应的类型的变量进行比较
+同类型的比较效率高的多
+Long vs Short variable names
+尽量用短的变量名
+
+
+10. 确定是性能问题而不是内存问题
+首先需要确定问题的来源。如果是因为引用素材或其他处理过程中大量耗费内存的操作用光了所有可用的RAM（内存），那CPU在请求获取数据的时候肯定会很慢。如果应用随着时间不断变慢，那可能是因为对象建立后忘记释放导致的内存泄露。只需要很简单的看下使用的内存量即可判断。Flash里面可以调用System.totalMemory来查看。或者直接在进程管理器里查看网页的占用内存。
+9. 不必要的导入
+    除非创建了大量类的实例并且有大量函数调用，否则这不会节省很多时间。但却是个很简单的提示性能的方式。
+8. Sprite和MovieClip
+如果有多个帧的话，此时需要使用MovieClip，其他时候只需要继承Sprite即可。
+7. 解决类型提示、未知、不正确对象类型
+    AS耗费大量时间来检测一个不理解的对象类型，或者强制转换对象类型。因此需要在函数参数及返回类型时注意对象类型。虽然对象类型兼容性改变不会节省大量时间。但是很多时候需要做数千次来查看这其中的性能差别。
+6. 不必需的操作和函数调用
+    能用乘法尽量不用除法。与其调用Flash的Math类的floor和round算法倒不如自己计算。将If语句排好序一边最可能的比较得到true。For跟while语句中只保存函数值而不是重复获取，也需要尽量重用对象。跟类型提示类似，函数调用也不需要太担心，但是在循环里如果迭代数百次则需要注意了，那可是很多的差别哦。 
+5. 避免使用遮罩
+    如果需要给一个正方形区域做一个遮罩，可以使用显示对象的scrollRect属性来代替。如果需要非正方形的遮罩，可以将shape放在有scrollRect属性的对象上。
+4. 不需要的事件关闭
+    事件派发是最耗费函数调用的操作之一。每个继承InteractiveObject类的类都会生成大量不需要的基类事件。花时间将MouseEnabled和MouseChildren设为false来保证事件系统尽量简洁。在不需要的时候将事件监听和EnterFrame事件删除哦。
+3. 现在添加到舞台上的美术素材
+    没必要遍历重绘那些没用或者没激活的节点。如果一个对象不经常可见，我会直接彻底销毁它然后再需要时候重新创建即可。此条最实用的地方就是菜单系统。
+2. 缓存合适的对象
+缓存那些最耗费资源的对象便于重绘。将对象缓存到内存，如果是静态的那就只需要重绘一次。滤镜效果会缓存对象的产生，如果同时有很多滤镜应用，它们可能会导致内存问题。如果缓存的对象是动画、放缩、旋转等图形操作，那对处理器的确是个很大负担。
+1. 对美工素材使用合适的类型
+    简单对象使用Vector，复杂图形则用jpg或者png文件类型。重绘和图形相关函数调用是最耗费处理器资源的操作。因此需要在重绘上进行改善。到文件->发布设置->Flash选项卡->生成大致素材修改报告里查看内存消耗情况
+
